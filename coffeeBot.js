@@ -6,7 +6,7 @@ var Bot = require('node-telegram-bot');
 
 //Init the telegram bot
 var bot = new Bot({
-  token: '694049938:AAHrefnNLUWkbO_1EE64JyCySIZnxNvglPI'
+  token: ''
 });
 
 //Attach on every received message
