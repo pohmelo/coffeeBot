@@ -9,7 +9,7 @@
 TODO: ADD DEPENDENCY INFORMATION
 
 ## Libraries
-TODO: ADD USED LIBRARIES
+HX711 library used: https://github.com/bogde/HX711
 
 ## USAGE:
 - Install dependecies (dependencies to be added)
