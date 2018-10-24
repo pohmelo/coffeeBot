@@ -1,9 +1,7 @@
 # coffeeBot
 
 ## The basic idea of the bot is this:
-- The bot consists of a raspi and a digital kitchen scale
-- A coffee pot is placed on the scale
-- After this the user can send a message via telegram to the telegram bot running on the raspi to check how much coffee there is in the pot. (Function later to be added: check the temperature of the coffee, subscription system: user can subscribe to the bot to get notifications when the coffee is brewing / ready).
+You place a coffee pot on a scale and leave it there (or if you have large enough scale place the whole machine on the scale, just calibrate it correctly). After this you can send the bot messages via Telegram app to see how much coffee there is in the pot. No need to, for example, move from your workstation to an empty coffee pot to feel the dissappointment.
 
 ## Dependencies
 TODO: ADD DEPENDENCY INFORMATION
