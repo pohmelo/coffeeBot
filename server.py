@@ -82,7 +82,7 @@ def make_reply(msg):
             scale_calibrate(config, val)
             reply = "{}\nCalibration done. The weight of the pot is {} grams".format(timestamp, val)
 
-        elif msg == "calibhelp":
+        elif msg == "/calibhelp":
             reply = """{}\nTo calibrate the scale, first send the /reset command to the bot and then place an empty pot on the scale.
 After this send the /calibrate message to the bot. After this the calibration is done""".format(timestamp)
 
@@ -92,7 +92,7 @@ After this send the /calibrate message to the bot. After this the calibration is
             elif cups > 0:
                 reply = "{}\nThere is approximately {} cups of coffee in the pot ({}dl)".format(timestamp, cups, dl)
 
-        elif msg != "/coffee" and msg != "/start" and msg != "/help" and msg != "/reset":
+        elif msg != "/coffee" and msg != "/start" and msg != "/help" and msg != "/reset" and msg != "/calibhelp":
             reply = "{}\nNot a valid command. Use command /help to see all available commands".format(timestamp)
         #elif msg == "/sub":
             #TODO: Subscribe system to get a notification when there is fresh coffee brewing
