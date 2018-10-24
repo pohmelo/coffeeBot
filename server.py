@@ -1,14 +1,17 @@
 from bot import telegram_chatbot
 from hx711 import HX711
 import RPi.GPIO as GPIO
-import configparser as cfg
+import configparser
 import datetime
 import sys
 
 #Bot setup
 update_id = None
-config = "config.cfg"
+config = "config.ini"
 bot = telegram_chatbot(config)
+
+#Parser setup
+parser = configparser.SafeConfigParser()
 
 #Scale setup
 hx = HX711(5, 6)
@@ -17,36 +20,30 @@ hx.set_reference_unit(1509)
 hx.reset()
 hx.tare()
 
-#Lines below are for a reset button system. Reset at the moment works by sending a "/reset" message to the bot
-#GPIO.setmode(GPIO.BCM)
-#GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
 #Cleanup
 def cleanAndExit():
     GPIO.cleanup()
     sys.exit()
 
-#Scale reset, hard reset resets the weight configuration for the pot
-def scale_reset():
-    hx.reset()
-    hx.tare()
+#Scale reset
 
-def scale_hard_reset(config):
-    parser = cfg.SafeConfigParser()
+def scale_reset(config):
     parser.read(config)
     parser.set('creds', 'weight', '0')
+    with open('config.ini', 'w') as configfile:
+        parser.write(configfile)
     hx.reset()
     hx.tare()
 
 #Scale calibration
-def calibrate(config, val):
+def scale_calibrate(config, val):
     val = str(val)
-    parser = cfg.SafeConfigParser()
     parser.read(config)
     parser.set('creds', 'weight', val)
+    with open('config.ini', 'w') as configfile:
+        parser.write(configfile)
 
 def get_pot_weight(config):
-    parser = cfg.SafeConfigParser()
     parser.read(config)
     val = parser.getint('creds', 'weight')
     return val
@@ -78,15 +75,16 @@ def make_reply(msg):
 /reset --> Resets the scale\n/calibrate --> Calibrates the scale\n/calibhelp --> Help on calibration""".format(timestamp)
 
         elif msg == "/reset":
-            scale_hard_reset(config)
+            scale_reset(config)
             reply = "{}\nReset done. You have to redo the calibration for the scale. Information on how to do the calibration type command /calibhelp".format(timestamp)
 
         elif msg == "/calibrate":
-            calibrate(config, val)
+            scale_calibrate(config, val)
             reply = "{}\nCalibration done. The weight of the pot is {} grams".format(timestamp, val)
 
         elif msg == "calibhelp":
-            reply = "{}\nTo calibrate the scale, place an empty pot on the scale. After this send the /calibrate message to the bot. After this the calibration is done".format(timestamp)
+            reply = """{}\nTo calibrate the scale, first send the /reset command to the bot and then place an empty pot on the scale.
+After this send the /calibrate message to the bot. After this the calibration is done""".format(timestamp)
 
         elif msg == "/coffee":
             if cups <= 0:
@@ -94,10 +92,6 @@ def make_reply(msg):
             elif cups > 0:
                 reply = "{}\nThere is approximately {} cups of coffee in the pot ({}dl)".format(timestamp, cups, dl)
 
-        elif msg == "/reset":
-            scale_reset()
-            reply = "{}\nThe scale has now been reset".format(timestamp)
-            
         elif msg != "/coffee" and msg != "/start" and msg != "/help" and msg != "/reset":
             reply = "{}\nNot a valid command. Use command /help to see all available commands".format(timestamp)
         #elif msg == "/sub":
@@ -110,10 +104,6 @@ def make_reply(msg):
 while True:
     try:
         print "..."
-        #Testing for the reset button system
-        #input_state = GPIO.input(18)
-        #if input_state == False:
-        #    print("Button pressed")
         updates = bot.get_updates(offset=update_id)
         updates = updates["result"]
         if updates:
