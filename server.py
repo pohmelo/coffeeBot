@@ -38,7 +38,7 @@ def scale_hard_reset(config):
     hx.reset()
     hx.tare()
 
-#Scale configuration
+#Scale calibration
 def calibrate(config, val):
     val = str(val)
     parser = cfg.SafeConfigParser()
@@ -72,25 +72,32 @@ def make_reply(msg):
         timestamp = "[{}/{}/{} {}:{}]".format(day, month, year, hour, minute)
         if val < 0:
             reply = "{}\nError. Value of scale information is below zero. Contact the administrator {}.".format(timestamp)
+
         elif msg == "/start" or msg == "/help":
             reply = """{}\nThe basic commands for the bot are:\n /coffee --> Tells you how much coffee there is.\n /help --> Shows you this message
 /reset --> Resets the scale\n/calibrate --> Calibrates the scale\n/calibhelp --> Help on calibration""".format(timestamp)
+
         elif msg == "/reset":
             scale_hard_reset(config)
             reply = "{}\nReset done. You have to redo the calibration for the scale. Information on how to do the calibration type command /calibhelp".format(timestamp)
+
         elif msg == "/calibrate":
             calibrate(config, val)
             reply = "{}\nCalibration done. The weight of the pot is {} grams".format(timestamp, val)
+
         elif msg == "calibhelp":
             reply = "{}\nTo calibrate the scale, place an empty pot on the scale. After this send the /calibrate message to the bot. After this the calibration is done".format(timestamp)
+
         elif msg == "/coffee":
             if cups <= 0:
                 reply = "{}\nThere is no coffee in the pot, or the scale system needs a reset. Go check the situation!".format(timestamp)
             elif cups > 0:
                 reply = "{}\nThere is approximately {} cups of coffee in the pot ({}dl)".format(timestamp, cups, dl)
+
         elif msg == "/reset":
             scale_reset()
             reply = "{}\nThe scale has now been reset".format(timestamp)
+            
         elif msg != "/coffee" and msg != "/start" and msg != "/help" and msg != "/reset":
             reply = "{}\nNot a valid command. Use command /help to see all available commands".format(timestamp)
         #elif msg == "/sub":
