@@ -13,8 +13,8 @@ TODO: ADD USED LIBRARIES
 
 ## USAGE:
 - Install dependecies (dependencies to be added)
-- Create a config.cfg file and format it as follows:
+- Create a config.ini file and format it as follows:
 ##### [creds]
-##### token = "YOUR TELEGRAM BOT TOKEN HERE"
+##### token = YOUR TELEGRAM BOT TOKEN HERE
 ##### weight = 0
 - Run server.py
