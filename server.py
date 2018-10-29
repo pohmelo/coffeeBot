@@ -26,7 +26,6 @@ def cleanAndExit():
     sys.exit()
 
 #Scale reset
-
 def scale_reset(config):
     parser.read(config)
     parser.set('creds', 'weight', '0')
